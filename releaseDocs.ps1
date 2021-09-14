@@ -9,7 +9,7 @@ write-host  "`ACTOR is $ACTOR"
 $SOURCE_DIR=$psscriptroot
 $TEMP_REPO_DIR=[System.IO.Path]::GetFullPath("$psscriptroot/../docs-gh-pages")
 
-$remote_repo="https://github-actions:${TOKEN}@github.com/rws/passolo-api-docs.git"
+$remote_repo="https://github-actions:${TOKEN}@github.com/rws/business-manager-api-docs.git"
 
 write-host "Removing temporary doc directory $TEMP_REPO_DIR"
 Remove-Item $TEMP_REPO_DIR -Force -Recurse -ErrorAction Ignore

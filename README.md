@@ -1,18 +1,18 @@
-# Passolo-api-docs
+# business-manager-api-docs
 
 ## What is it?
 
-This the main repository for the Passolo Public API documentation.
+This the main repository for the Trados Business Manager Public API documentation.
 
 ## Can I contribute?
 
-Anyone is welcome to contribute to the public Passolo API documentation by making a pull request into the master repository.
+Anyone is welcome to contribute to the public Trados Business Manager API documentation by making a pull request into the master repository.
 
 
 The documentation is split into the following sections:
 - Articles
   - This section hosts a series of usefull article on:
-    - how to get started with writing plug-ins for Passolo
+    - how to get started with writing plug-ins for Trados Business Manager
     - how to best use the public APIs
     - how to troubleshoot common issues
 - API Concepts
@@ -33,6 +33,6 @@ In order for you to make a contribution directly please follow the next steps:
 - if you wish to test your changes locally you can follow the [DOCFX Installation guideline](https://dotnet.github.io/docfx/tutorial/docfx_getting_started.html) and [build the entire solution locally](https://dotnet.github.io/docfx/tutorial/walkthrough/walkthrough_create_a_docfx_project.html)
 - Our documentation automatically fills in the product name and other details so you don't have to make the changes manually if we decide to update the product name. Use the '<var:VariableName>' construct to tell our documentation engine to fill in the info for you. Here are the constructs available at this point:
 
-      <var:ProductName> - The product name, for example Passolo
-      <var:ProductNameWithEdition> - The official product release name including the edition, for example 'Passolo 2021'
+      <var:ProductName> - The product name, for example Trados Business Manager
+      <var:ProductNameWithEdition> - The official product release name including the edition, for example 'Trados Business Manager 2021'
       
