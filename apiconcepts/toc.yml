@@ -1,2 +1,4 @@
 - name: Overview
   href: overview.md
+- name: Authorization
+  href: authorization.md
