@@ -5,7 +5,7 @@ First of all, expand **Translation project** group and find an endpoint to creat
 
 For example, you're going to read simple list of Units. Let's expand **Unit** group and find endpoint which allows to read list of units:
 
-![API docs](/images/project_model.png)
+![API docs](../images/project_model.png)
 
 In the same manner as for units, let's create a model class for translation project:
 

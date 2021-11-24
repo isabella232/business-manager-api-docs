@@ -4,10 +4,10 @@ First of all, it is recommended to open API documentation (via URL where you hav
 
 For example, you're going to read simple list of Units. Let's expand **Unit** group and find endpoint which allows to read list of units:
 
-![API docs](/images/unit_endpoint.png)
+![API docs](../images/unit_endpoint.png)
 
 In the **Example value** group you can see the structure of returned rows. If you switch to the **Model** tab, you will find detailed description of fields of the Units table:
-![API docs](/images/unit_model.png)
+![API docs](../images/unit_model.png)
 
 By following this model, you can re-create a class in your application for de-serialization of the Unit objects. It could look like this:
 
