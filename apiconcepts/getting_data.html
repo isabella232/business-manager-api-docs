@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Trados Business Manager API Documentation </title>
+    <title>How to read data using API </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Trados Business Manager API Documentation ">
+    <meta name="title" content="How to read data using API ">
     <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -80,22 +80,64 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="trados-business-manager-api-documentation">Trados Business Manager API Documentation</h1>
+<h1 id="how-to-read-data-using-api">How to read data using API</h1>
 
-<h2 id="introduction">Introduction</h2>
-<p>Trados Business Manager (TBM) allows you to use the API to manipulate its data. The API covers all the tables existing in the TBM database from reference data, to all documents. In general, using the API you can create, edit and delete any data contained in your TBM instance.</p>
-<p>Some functionalities may be missing in API (for example, retrieving a list of recommended vendors in a new translation assignment). We&#39;ll be extending the API capabilities by adding more endpoints with time. You can use the &quot;Improve this Doc&quot; feature on this page to submit a pull request with any suggested changes, and you can also use the <a href="https://community.sdl.com/product-groups/translationproductivity/business-manager/f/business-manager-team-enterprise">RWS Community forums</a>. </p>
-<h2 id="guide-to-using-the-trados-business-manager-api">Guide to using the Trados Business Manager API</h2>
-<p>You can find a useful introduction to the TBM API in the RWS Community here:
-<a href="https://community.sdl.com/product-groups/translationproductivity/business-manager/w/wiki/5916/api">https://community.sdl.com/product-groups/translationproductivity/business-manager/w/wiki/5916/api</a></p>
-<h3 id="where-to-find-the-api-documentation">Where to find the API Documentation</h3>
-<p>The API has to be installed separately on your server as it is not delivered with the main TBM application. It&#39;s also only available with the Team and Enterprise editions of TBM from version 6 onwards. You&#39;ll find some information about how to install and configure the application in this <a href="https://community.sdl.com/product-groups/translationproductivity/business-manager/w/wiki/5916/api">wiki article</a> in the RWS Community.</p>
-<h3 id="exploring-the-swagger-interface">Exploring the Swagger Interface</h3>
-<p>You can explore the available endpoints using the Trados Business Manager API documentation available here:
-<a href="https://api.ibaccs.com">https://api.ibaccs.com</a></p>
-<h3 id="video-tutorial">Video Tutorial</h3>
-<p>You can also find a useful video demonstrating how to use the TBM API capabilities to create custom tools for manipulating data stored in the TBM database:</p>
-<p><a href="https://youtu.be/p-0vgL9Y3Yg" title="Trados Business Manager API using swagger"><img src="https://img.youtube.com/vi/p-0vgL9Y3Yg/0.jpg" alt="Trados Business Manager API using swagger"></a></p>
+<p>First of all, it is recommended to open API documentation (via URL where you have installed API website, or using example API website: <a href="https://api.ibaccs.com">https://api.ibaccs.com</a>). In the list you can find a lot of endpoints supported by API. Eech endpoint has a label identifying type of request which should be send to that endpoint. GET requests are used only to read data, while POST requests allow to create data, PATCH - to edit data, and DELETE - to delete data. In this article, we&#39;re going to descirbe <strong>GET</strong> requests.</p>
+<p>For example, you&#39;re going to read simple list of Units. Let&#39;s expand <strong>Unit</strong> group and find endpoint which allows to read list of units:</p>
+<p><img src="/images/unit_endpoint.png" alt="API docs"></p>
+<p>In the <strong>Example value</strong> group you can see the structure of returned rows. If you switch to the <strong>Model</strong> tab, you will find detailed description of fields of the Units table:
+<img src="/images/unit_model.png" alt="API docs"></p>
+<p>By following this model, you can re-create a class in your application for de-serialization of the Unit objects. It could look like this:</p>
+<pre><code class="lang-cs">public class UnitDto
+ {
+     [Description(&quot;Record ID&quot;)]
+     public Guid Id { get; set; }
+     [Description(&quot;Unit name&quot;)]
+     public string Name { get; set; }
+     public string NameL1 { get; set; }
+     public string NameL2 { get; set; }
+     public string NameL3 { get; set; }
+     public decimal AdjustmentFactor { get; set; }
+     public bool IsTime { get; set; }
+     public bool FlatRate { get; set; }
+     public UnitDtoLite BaseUnit { get; set; }
+     [Description(&quot;Unit weights&quot;)]
+     public List&lt;UnitWeightItemDto&gt; UnitWeights { get; set; }
+ }
+
+ public class UnitDtoLite
+ {
+     [Description(&quot;Record ID&quot;)]
+     public Guid Id { get; set; }
+     [Description(&quot;Unit name&quot;)]
+     public string Name { get; set; }
+ }
+
+ public class UnitWeightItemDto
+ {
+     [Description(&quot;Record ID&quot;)]
+     public Guid Id { get; set; }
+     [Description(&quot;Unit&quot;)]
+     public UnitDtoLite Unit { get; set; }
+     [Description(&quot;Service type&quot;)]
+     public ServiceTypeDtoLite ServiceType { get; set; }
+     [Description(&quot;Fuzzy weight&quot;)]
+     public decimal AdjustmentFactor { get; set; }
+ }
+</code></pre><p>Now, when you have necessary classes and access token, you can send a request and get de-serializaed list of units:</p>
+<pre><code class="lang-cs">var client = new RestClient(&quot;https://localhost:44334/Unit&quot;);
+var request = new RestRequest(Method.GET);
+request.AddHeader(&quot;Authorization&quot;, &quot;Bearer your_token&quot;);
+IRestResponse response = client.Execute(request);
+try
+{
+     var units = JsonConvert.DeserializeObject&lt;UnitDto[]&gt;(response);
+}
+catch(Exception e)
+{
+     ...
+}
+</code></pre><p>In the same manner, you can create model classes for other entities (for example, translation job has much more fields, so it won&#39;t be a quick job), and use them to retrieve data from other endpoints.</p>
 </article>
           </div>
           
@@ -104,7 +146,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/RWS/business-manager-api-docs/blob/main/apiconcepts/overview.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/RWS/business-manager-api-docs/blob/main/apiconcepts/getting_data.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

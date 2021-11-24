@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Trados Business Manager API Documentation </title>
+    <title>Authorization </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Trados Business Manager API Documentation ">
+    <meta name="title" content="Authorization ">
     <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -80,23 +80,42 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="trados-business-manager-api-documentation">Trados Business Manager API Documentation</h1>
+<h1 id="authorization">Authorization</h1>
 
-<h2 id="introduction">Introduction</h2>
-<p>Trados Business Manager (TBM) allows you to use the API to manipulate its data. The API covers all the tables existing in the TBM database from reference data, to all documents. In general, using the API you can create, edit and delete any data contained in your TBM instance.</p>
-<p>Some functionalities may be missing in API (for example, retrieving a list of recommended vendors in a new translation assignment). We&#39;ll be extending the API capabilities by adding more endpoints with time. You can use the &quot;Improve this Doc&quot; feature on this page to submit a pull request with any suggested changes, and you can also use the <a href="https://community.sdl.com/product-groups/translationproductivity/business-manager/f/business-manager-team-enterprise">RWS Community forums</a>. </p>
-<h2 id="guide-to-using-the-trados-business-manager-api">Guide to using the Trados Business Manager API</h2>
-<p>You can find a useful introduction to the TBM API in the RWS Community here:
-<a href="https://community.sdl.com/product-groups/translationproductivity/business-manager/w/wiki/5916/api">https://community.sdl.com/product-groups/translationproductivity/business-manager/w/wiki/5916/api</a></p>
-<h3 id="where-to-find-the-api-documentation">Where to find the API Documentation</h3>
-<p>The API has to be installed separately on your server as it is not delivered with the main TBM application. It&#39;s also only available with the Team and Enterprise editions of TBM from version 6 onwards. You&#39;ll find some information about how to install and configure the application in this <a href="https://community.sdl.com/product-groups/translationproductivity/business-manager/w/wiki/5916/api">wiki article</a> in the RWS Community.</p>
-<h3 id="exploring-the-swagger-interface">Exploring the Swagger Interface</h3>
-<p>You can explore the available endpoints using the Trados Business Manager API documentation available here:
-<a href="https://api.ibaccs.com">https://api.ibaccs.com</a></p>
-<h3 id="video-tutorial">Video Tutorial</h3>
-<p>You can also find a useful video demonstrating how to use the TBM API capabilities to create custom tools for manipulating data stored in the TBM database:</p>
-<p><a href="https://youtu.be/p-0vgL9Y3Yg" title="Trados Business Manager API using swagger"><img src="https://img.youtube.com/vi/p-0vgL9Y3Yg/0.jpg" alt="Trados Business Manager API using swagger"></a></p>
-</article>
+<p>In order to send requests to the TBM API, you have to retrieve a token and include it in the header of all API requests.</p>
+<p>Token can be retrieved by sending POST request to the following endpoint:
+https://{API_URL}/Logon</p>
+<p>with the following body:</p>
+<pre><code class="lang-json">{
+  &quot;tenant&quot;: &quot;TBM&quot;,
+  &quot;userName&quot;: &quot;Admin&quot;,
+  &quot;userPassword&quot;: &quot;Your_Password&quot;
+}
+</code></pre><p>If specified credentials are valid, a server will return you a token:</p>
+<pre><code class="lang-json">{
+&quot;access_token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW4iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJUQk0iLCJuYmYiOjE2MzMwODExNjMsImV4cCI6MTYzNTY3MzE2MywiaXNzIjoiTXlBdXRoU2VydmVyIiwiYXVkIjoiTXlBdXRoQ2xpZW50In0.kLWE3QxZCDsuhHCf8JJq1CzZ1E867GYNFz1pwaenapg&quot;,
+&quot;username&quot;: &quot;Admin&quot;
+}
+</code></pre><p>You can save this token and add it to the <strong>Authorization</strong> header in the form of &quot;Bearer&quot; word followed by your token after space, like this:</p>
+<blockquote><p>Bearer <em>your_token</em></p>
+</blockquote>
+<p>Take a note that when you login with some user and password, it will affect on results of all operation you perform via API. This means that if you login with a user with limited access rights, then API won&#39;t allow you to read or write beyond allowed boundaries. To test this, you can create few users via TBM UI, limit access for second user, and then try to send login requests via API for these users. After that, try to send GET requests to retrieve list of entities where you have set limited access - you will notice that one user receives more data than the other.</p>
+<h1 id="code-examples">Code examples</h1>
+<p>Here you will find few code examples written in C# demonstrating how to authorize in API.</p>
+<h2 id="sending-logon-request">Sending Logon request</h2>
+<pre><code class="lang-cs">var client = new RestClient(&quot;https://localhost:44334/Logon&quot;);
+var request = new RestRequest(Method.POST);
+var body = JsonConverter.SerializeObject(logonModel);
+request.AddParameter(&quot;application/json&quot;, body,  ParameterType.RequestBody);
+IRestResponse response = client.Execute(request);
+Console.WriteLine(response.Content);
+</code></pre><h2 id="sending-get-request-with-bearer-token">Sending GET request with Bearer token</h2>
+<pre><code class="lang-cs">var client = new RestClient(&quot;https://localhost:44334/Unit&quot;);
+var request = new RestRequest(Method.GET);
+request.AddHeader(&quot;Authorization&quot;, &quot;Bearer your_token&quot;);
+IRestResponse response = client.Execute(request);
+Console.WriteLine(response.Content);
+</code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
@@ -104,7 +123,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/RWS/business-manager-api-docs/blob/main/apiconcepts/overview.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/RWS/business-manager-api-docs/blob/main/apiconcepts/authorization.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
