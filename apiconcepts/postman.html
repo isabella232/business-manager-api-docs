@@ -83,16 +83,16 @@
 <h1 id="postman---usage-and-helper-library-download">Postman - usage and helper library download</h1>
 
 <p>Postman (<a href="https://www.postman.com/">https://www.postman.com/</a>) is a great tool used by many API developers and users to test and use APIs. It provides a lot of possibilities to automate things and make API usage much easier.</p>
-<p>To make it easier for your to start with TBM API, we have created a library for postman, which contains a lot of sample API calls, from reading simple lists, to creating projects, uploading files and deleting temporarily created data. You can download zip file by <strong><a href="/images/TBM.postman_collection.zip">clicking here</a></strong>. Then, extract zip archive, run Postman and select <strong>File &gt; Import</strong> to load json file. In the result, you should get the following tree:</p>
-<p><img src="/images/postman_tree.png" alt="API docs"></p>
+<p>To make it easier for your to start with TBM API, we have created a library for postman, which contains a lot of sample API calls, from reading simple lists, to creating projects, uploading files and deleting temporarily created data. You can download zip file by <strong><a href="../images/TBM.postman_collection.zip">clicking here</a></strong>. Then, extract zip archive, run Postman and select <strong>File &gt; Import</strong> to load json file. In the result, you should get the following tree:</p>
+<p><img src="../images/postman_tree.png" alt="API docs"></p>
 <p>You can start with <strong>Logon &gt; Logon</strong> item, which allows to get a token to access library. When you open this request, you will find that URL contains <strong>{{baseUri}}</strong> variable:
-<img src="/images/postman_logon.png" alt="API docs"></p>
+<img src="../images/postman_logon.png" alt="API docs"></p>
 <p>You have to fill this variable in the variable list, and your URL will be correctly applied to all requests contained in the library:
-<img src="/images/postman_baseuri.png" alt="API docs"></p>
+<img src="../images/postman_baseuri.png" alt="API docs"></p>
 <p>Then, fill correct user name and password in the request body and send the request. In the result you will get a response with access token:
-<img src="/images/postman_accesstoken.png" alt="API docs"></p>
+<img src="../images/postman_accesstoken.png" alt="API docs"></p>
 <p>Nice part here is that you don&#39;t have to copy this access token manually and paste it somewhere. It will be saved automatically and attached to all your future requests. For this, <strong>{{access_token
-}}</strong> variable will be used. So, if logon request was successfull, you can move to any other requests contained in the library, and it will be processed correctly from a currently logged in user.</p>
+}}</strong> variable will be used. So, if logon request was successful, you can move to any other requests contained in the library, and it will be processed correctly from a currently logged in user.</p>
 </article>
           </div>
           
